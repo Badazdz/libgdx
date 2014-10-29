@@ -110,7 +110,7 @@ public class Label extends Widget {
 		return true;
 	}
 
-	public CharSequence getText () {
+	public StringBuilder getText () {
 		return text;
 	}
 
@@ -211,7 +211,7 @@ public class Label extends Widget {
 			style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 		}
 		if (style.fontColor != null) color.mul(style.fontColor);
-		cache.setColors(color);
+		cache.tint(color);
 		cache.setPosition(getX(), getY());
 		cache.draw(batch);
 	}

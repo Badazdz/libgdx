@@ -89,7 +89,7 @@ class LwjglGL20 implements com.badlogic.gdx.graphics.GL20 {
 
 	public void glBufferData (int target, int size, Buffer data, int usage) {
 		if(data == null)
-			throw new GdxRuntimeException("Using null for the data not possible, blame LWJGL");
+			GL15.glBufferData(target, size, usage);
 		else if (data instanceof ByteBuffer)
 			GL15.glBufferData(target, (ByteBuffer)data, usage);
 		else if (data instanceof IntBuffer)
@@ -719,6 +719,16 @@ class LwjglGL20 implements com.badlogic.gdx.graphics.GL20 {
 						+ " with type "
 						+ type
 						+ " with this method. Use ByteBuffer and one of GL_BYTE, GL_UNSIGNED_BYTE, GL_SHORT, GL_UNSIGNED_SHORT or GL_FLOAT for type. Blame LWJGL");
+		} else if (buffer instanceof FloatBuffer) {
+			if (type == GL_FLOAT)
+				GL20.glVertexAttribPointer(indx, size, normalized, stride, (FloatBuffer)buffer);
+			else
+				throw new GdxRuntimeException(
+					"Can't use "
+						+ buffer.getClass().getName()
+						+ " with type "
+						+ type
+						+ " with this method.");
 		} else
 			throw new GdxRuntimeException("Can't use " + buffer.getClass().getName()
 				+ " with this method. Use ByteBuffer instead. Blame LWJGL");

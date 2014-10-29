@@ -160,9 +160,11 @@ public class FileHandle {
 	/** Returns a reader for reading this file as characters.
 	 * @throws GdxRuntimeException if the file handle represents a directory, doesn't exist, or could not be read. */
 	public Reader reader (String charset) {
+		InputStream stream = read();
 		try {
-			return new InputStreamReader(read(), charset);
+			return new InputStreamReader(stream, charset);
 		} catch (UnsupportedEncodingException ex) {
+			StreamUtils.closeQuietly(stream);
 			throw new GdxRuntimeException("Error reading file: " + this, ex);
 		}
 	}
@@ -412,8 +414,9 @@ public class FileHandle {
 		int count = 0;
 		for (int i = 0, n = relativePaths.length; i < n; i++) {
 			String path = relativePaths[i];
-			if (!filter.accept(file)) continue;
-			handles[count] = child(path);
+			FileHandle child = child(path);
+			if (!filter.accept(child.file())) continue;
+			handles[count] = child;
 			count++;
 		}
 		if (count < relativePaths.length) {

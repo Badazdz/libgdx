@@ -139,34 +139,6 @@ public final class Intersector {
 		return oddNodes;
 	}
 
-	/** Returns the distance between the given line segment and point.
-	 * 
-	 * @param start The line start point
-	 * @param end The line end point
-	 * @param point The point
-	 * 
-	 * @return The distance between the line segment and the point. */
-	public static float distanceLinePoint (Vector2 start, Vector2 end, Vector2 point) {
-		tmp.set(end.x, end.y, 0);
-		float l2 = tmp.sub(start.x, start.y, 0).len2();
-		if (l2 == 0.0f) // start == end
-			return point.dst(start);
-
-		tmp.set(point.x, point.y, 0);
-		tmp.sub(start.x, start.y, 0);
-		tmp2.set(end.x, end.y, 0);
-		tmp2.sub(start.x, start.y, 0);
-
-		float t = tmp.dot(tmp2) / l2;
-		if (t < 0.0f)
-			return point.dst(start); // Beyond 'start'-end of the segment
-		else if (t > 1.0f) return point.dst(end); // Beyond 'end'-end of the segment
-
-		tmp.set(end.x, end.y, 0); // Projection falls on the segment
-		tmp.sub(start.x, start.y, 0).scl(t).add(start.x, start.y, 0);
-		return tmp2.set(point.x, point.y, 0).dst(tmp);
-	}
-
 	/** Returns the distance between the given line and point. Note the specified line is not a line segment. */
 	public static float distanceLinePoint (float startX, float startY, float endX, float endY, float pointX, float pointY) {
 		float normalLength = (float)Math.sqrt((endX - startX) * (endX - startX) + (endY - startY) * (endY - startY));
@@ -255,6 +227,28 @@ public final class Intersector {
 			return d;
 		} else
 			return Float.POSITIVE_INFINITY;
+	}
+	
+	/** Intersect two 2D Rays and return the scalar parameter of the first ray at the intersection point.
+	 * You can get the intersection point by: Vector2 point(direction1).scl(scalar).add(start1);
+	 * For more information, check: http://stackoverflow.com/a/565282/1091440
+	 * @param start1 Where the first ray start
+	 * @param direction1 The direction the first ray is pointing
+	 * @param start2 Where the second ray start
+	 * @param direction2 The direction the second ray is pointing
+	 * @return scalar parameter on the first ray describing the point where the intersection happens. May be negative.
+	 * In case the rays are collinear, Float.POSITIVE_INFINITY will be returned.
+	 */
+	public static float intersectRayRay(Vector2 start1, Vector2 direction1, Vector2 start2, Vector2 direction2) {
+		float difx = start2.x - start1.x;
+		float dify = start2.y - start1.y;
+		float d1xd2 = direction1.x * direction2.y - direction1.y * direction2.x;
+		if(d1xd2 == 0.0f) {
+			return Float.POSITIVE_INFINITY; //collinear
+		}
+		float d2sx = direction2.x / d1xd2;
+		float d2sy = direction2.y / d1xd2;
+		return difx * d2sy - dify * d2sx;
 	}
 
 	/** Intersects a {@link Ray} and a {@link Plane}. The intersection point is stored in intersection in case an intersection is

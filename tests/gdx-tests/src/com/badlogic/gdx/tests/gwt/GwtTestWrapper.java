@@ -40,6 +40,7 @@ import com.badlogic.gdx.tests.ActionSequenceTest;
 import com.badlogic.gdx.tests.ActionTest;
 import com.badlogic.gdx.tests.AlphaTest;
 import com.badlogic.gdx.tests.AnimationTest;
+import com.badlogic.gdx.tests.AnnotationTest;
 import com.badlogic.gdx.tests.AssetManagerTest;
 import com.badlogic.gdx.tests.AtlasIssueTest;
 import com.badlogic.gdx.tests.BitmapFontAlignmentTest;
@@ -50,6 +51,7 @@ import com.badlogic.gdx.tests.BlitTest;
 import com.badlogic.gdx.tests.Box2DCharacterControllerTest;
 import com.badlogic.gdx.tests.Box2DTest;
 import com.badlogic.gdx.tests.Box2DTestCollection;
+import com.badlogic.gdx.tests.BufferUtilsTest;
 import com.badlogic.gdx.tests.ComplexActionTest;
 import com.badlogic.gdx.tests.CustomShaderSpriteBatchTest;
 import com.badlogic.gdx.tests.DecalTest;
@@ -90,7 +92,6 @@ import com.badlogic.gdx.tests.SpriteBatchShaderTest;
 import com.badlogic.gdx.tests.SpriteCacheOffsetTest;
 import com.badlogic.gdx.tests.SpriteCacheTest;
 import com.badlogic.gdx.tests.StageTest;
-import com.badlogic.gdx.tests.StateMachineTest;
 import com.badlogic.gdx.tests.TableTest;
 import com.badlogic.gdx.tests.TextButtonTest;
 import com.badlogic.gdx.tests.TextureAtlasTest;
@@ -295,6 +296,11 @@ public class GwtTestWrapper extends GdxTest {
 		public boolean isKeyPressed (int key) {
 			return input.isKeyPressed(key);
 		}
+		
+		@Override
+		public boolean isKeyJustPressed (int key) {
+			return input.isKeyJustPressed(key);
+		}
 
 		@Override
 		public void getTextInput (TextInputListener listener, String title, String text) {
@@ -354,6 +360,11 @@ public class GwtTestWrapper extends GdxTest {
 		@Override
 		public void setCatchBackKey (boolean catchBack) {
 			input.setCatchBackKey(catchBack);
+		}
+
+		@Override
+		public boolean isCatchBackKey() {
+			return input.isCatchBackKey();
 		}
 
 		@Override
@@ -430,6 +441,10 @@ public class GwtTestWrapper extends GdxTest {
 		}
 	}, new Instancer() {
 		public GdxTest instance () {
+			return new AnnotationTest();
+		}
+	}, new Instancer() {
+		public GdxTest instance () {
 			return new AssetManagerTest();
 		}
 	}, new Instancer() {
@@ -467,6 +482,10 @@ public class GwtTestWrapper extends GdxTest {
 	}, new Instancer() {
 		public GdxTest instance () {
 			return new Box2DTestCollection();
+		}
+	}, new Instancer() {
+		public GdxTest instance () {
+			return new BufferUtilsTest();
 		}
 	}, new Instancer() {
 		public GdxTest instance () {
@@ -683,10 +702,6 @@ public class GwtTestWrapper extends GdxTest {
 		}, new Instancer() {
 			public GdxTest instance () {
 				return new TimeUtilsTest();
-			}
-		}, new Instancer() {
-			public GdxTest instance () {
-				return new StateMachineTest();
 			}
 		}};
 }
